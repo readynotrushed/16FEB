@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Response Tracker | Feb 2026</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #ccdcee;
+    --blue: #6fa8dc;
+    --blue-dark: #3a7ab8;
+    --blue-deeper: #1d4f78;
+    --blue-bg: #eef4fb;
+    --blue-border: #b0cde8;
+    --blue-mid: #d4e8f7;
+    --amber-bg: #fdf4e3;
+    --amber-text: #7a4f00;
+    --amber-border: #e0c880;
+    --red-bg: #fdeaea;
+    --red-text: #8a1a1a;
+    --red-border: #e0a0a0;
+    --link: #3a7ab8;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+    padding: 0 16px 60px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .site-label {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 28px 0 6px;
+    display: block;
+  }
+  h1 {
+    font-size: clamp(20px, 5vw, 28px);
+    font-weight: normal;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    max-width: 560px;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+  /* ── STATS ── */
+  .stats-row {
+    display: flex;
+    margin-bottom: 16px;
+    border: 1px solid var(--blue-border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--blue-bg);
+  }
+  .stat-cell {
+    flex: 1;
+    padding: 14px 12px;
+    border-right: 1px solid var(--blue-border);
+    text-align: center;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-num {
+    font-size: 26px;
+    font-weight: 700;
+    display: block;
+    line-height: 1;
+    margin-bottom: 5px;
+    color: var(--blue-deeper);
+  }
+  .stat-label {
+    font-size: 10.5px;
+    color: var(--blue-dark);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1.35;
+  }
+
+  /* ── SUGGEST BUTTON ── */
+  .suggest-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--blue-deeper);
+    background: var(--blue-bg);
+    border: 1.5px solid var(--blue-border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-decoration: none;
+    transition: background 0.12s, border-color 0.12s;
+    margin-bottom: 20px;
+  }
+  .suggest-btn:hover { background: var(--blue-mid); border-color: var(--blue); }
+
+  /* ── FILTERS ── */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .filter-btn {
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: inherit;
+  }
+  .filter-btn:hover { border-color: var(--blue-dark); color: var(--blue-deeper); }
+  .filter-btn.active { background: var(--blue-deeper); border-color: var(--blue-deeper); color: #fff; }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .search-input {
+    width: 100%;
+    padding: 10px 16px 10px 38px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.12s;
+  }
+  .search-input:focus { border-color: var(--blue); }
+  .search-input::placeholder { color: #bbb; }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  /* ── SECTION HEADING ── */
+  .section-title {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 26px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── CARD ── */
+  .card {
+    border: 1px solid var(--blue-border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .card-summary {
+    background: var(--blue-bg);
+    border-bottom: 1px solid var(--blue-border);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .card-summary-left { flex: 1; min-width: 0; }
+  .card-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .tag-type { background: rgba(111,168,220,0.2); color: var(--blue-deeper); }
+  .tag-curriculum { background: rgba(0,0,0,0.06); color: #444; }
+
+  /* parent count — prominent */
+  .card-count-block { text-align: right; flex-shrink: 0; }
+  .count-big {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--blue-deeper);
+    line-height: 1;
+    display: block;
+  }
+  .count-label {
+    font-size: 10px;
+    color: var(--blue-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-top: 3px;
+  }
+  .count-zero { font-size: 32px; font-weight: 700; color: #ccc; line-height: 1; display: block; }
+  .count-zero-label { font-size: 10px; color: #bbb; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-top: 3px; }
+
+  /* card body */
+  .card-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 9px; background: #fff; }
+
+  .status-line {
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    line-height: 1.5;
+  }
+  .status-ok { background: var(--blue-bg); color: var(--blue-deeper); border: 1px solid var(--blue-border); }
+  .status-waiting { background: var(--amber-bg); color: var(--amber-text); border: 1px solid var(--amber-border); }
+  .status-no { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); }
+
+  .khda-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    width: fit-content;
+  }
+  .khda-yes { background: var(--blue-mid); color: var(--blue-deeper); }
+  .khda-no  { background: #f0f0f0; color: #999; }
+
+  .detail-line {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .detail-line .ico { flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+  .detail-line a { color: var(--link); text-decoration: none; }
+  .detail-line a:hover { text-decoration: underline; }
+
+  .update-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--muted);
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 4px 12px;
+    text-decoration: none;
+    width: fit-content;
+    transition: all 0.12s;
+    margin-top: 2px;
+  }
+  .update-btn:hover { background: var(--blue-bg); color: var(--blue-deeper); border-color: var(--blue-border); }
+
+  /* ── NO RESULTS ── */
+  .no-results {
+    text-align: center;
+    padding: 48px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .no-results a { color: var(--link); }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 32px;
+    background: #fafafa;
+  }
+  .disclaimer strong { display: block; margin-bottom: 4px; color: var(--text); }
+  .disclaimer a { color: var(--link); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  footer a { color: var(--link); }
+
+  @media (max-width: 440px) {
+    .stat-num { font-size: 22px; }
+    .count-big, .count-zero { font-size: 26px; }
+    .stat-label { font-size: 9.5px; }
+  }
+</style>
+</head>
+<body>
+
+<span class="site-label">Dubai · School admissions · Feb 2026</span>
+<h1>School &amp; Nursery Response Tracker</h1>
+<p class="subtitle">Informal record of which schools and nurseries have communicated about the admission age policy. Based on information shared informally between parents. Data may be incomplete or contain errors — always contact your school directly.</p>
+
+<hr>
+
+<div class="stats-row">
+  <div class="stat-cell">
+    <span class="stat-num" id="s-schools">0</span>
+    <span class="stat-label">Schools</span>
+  </div>
+  <div class="stat-cell">
+    <span class="stat-num" id="s-nurseries">0</span>
+    <span class="stat-label">Nurseries</span>
+  </div>
+  <div class="stat-cell">
+    <span class="stat-num" id="s-khda">0</span>
+    <span class="stat-label">KHDA 16 Feb circular confirmed</span>
+  </div>
+</div>
+
+<a class="suggest-btn" href="mailto:readynotrushed@pm.me?subject=Suggest%20a%20school%20or%20nursery%20for%20the%20tracker">
+  + Suggest a school or nursery
+</a>
+
+<div class="filters">
+  <button class="filter-btn active" data-f="all">All</button>
+  <button class="filter-btn" data-f="school">Schools</button>
+  <button class="filter-btn" data-f="nursery">Nurseries</button>
+</div>
+
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input class="search-input" id="search-input" type="search" placeholder="Search by name…" autocomplete="off">
+</div>
+
+<div id="cards-container"></div>
+
+<a class="suggest-btn" href="mailto:readynotrushed@pm.me?subject=Suggest%20a%20school%20or%20nursery%20for%20the%20tracker" style="margin-top:24px;margin-bottom:0">
+  + Suggest a school or nursery
+</a>
+
+<div class="disclaimer">
+  <strong>Disclaimer</strong>
+  The below reflects common current unofficial understanding and interpretation of the Ministry of Education <a href="https://www.moe.gov.ae/En/ImportantLinks/Documents/Files2026/Admission-age-guide-KG-G1/Admission%20Age%20Guide%20for%20KG%20and%20Grade%201%20Students.pdf?utm_source=ig&utm_medium=social&utm_content=link_in_bio" target="_blank" rel="noopener">guidelines</a> shared on February 12th 2026. It has been prepared in good faith and with the best intent to support parents in navigating the updates. This document is not issued by the MOE or KHDA, nor does it represent their official wording. While the information has been sourced from official documents, alignment of interpretation with authorities cannot be guaranteed. For official clarification, please refer directly to MOE / KHDA communications.
+</div>
+
+<footer>
+  Information shared informally between parents. No affiliation with KHDA, MOE, or any school. Always verify with your school directly. &nbsp;·&nbsp; <a href="mailto:readynotrushed@pm.me">readynotrushed@pm.me</a>
+</footer>
+
+<script>
+const DATA = [
+  {
+    id:"jas", name:"Jumeirah American School (JAS)", type:"school", status:"confirmed",
+    curriculum:"American", grades:"FS1–G12", location:"Jumeirah",
+    phone:null, website:"www.jas.ae", email:null,
+    parentsConfirmed:3, parentsKhda:2,
+    note:"Emailed all affected parents on 13 Feb indicating FS1 pending confirmation. Confirmation email citing KHDA guidance sent 16 Feb at 21:22."
+  },
+  {
+    id:"kings-albarsha", name:"Kings School Al Barsha", type:"school", status:"confirmed",
+    curriculum:"British", grades:"FS1–Y13", location:"Al Barsha",
+    phone:"97143566900", website:"www.kingsdubai.com", email:"govtrelations@kingsdubai.com",
+    parentsConfirmed:4, parentsKhda:2,
+    note:"Principal verbally confirmed FS1 seats would be reinstated on 13 Feb. Further email 16 Feb. Also offered FS1/FS2 choice to 2023 babies on 17 Feb."
+  },
+  {
+    id:"kings-dubai", name:"Kings School Dubai", type:"school", status:"confirmed",
+    curriculum:"British", grades:"FS1–Y6", location:"Umm Suqeim",
+    phone:"97143483939", website:"kings-edu.com/dubai", email:"principal@kingsdubai.com",
+    parentsConfirmed:2, parentsKhda:1,
+    note:"Email sent 16 Feb reinstating FS1 spots. Further email 17 Feb offering choice of FS1 this year or next for 2023 babies."
+  },
+  {
+    id:"jess", name:"Jumeirah English Speaking School (JESS)", type:"school", status:"confirmed",
+    curriculum:"British / IB", grades:"FS1–G13", location:"Arabian Ranches / Al Safa",
+    phone:"97143619019", website:"www.jess.sch.ae", email:"director@jess.sch.ae",
+    parentsConfirmed:4, parentsKhda:3,
+    note:"On 13 Feb school indicated communication would follow the following week. FS1 reinstatement confirmed by email to multiple parents early morning 17 Feb."
+  },
+  {
+    id:"dbs-jumeirah", name:"Dubai British School Jumeira (DBSJ)", type:"school", status:"confirmed",
+    curriculum:"British", grades:"ECC–Y7", location:"Jumeira",
+    phone:null, website:"dubaibritishschooljumeira.ae", email:"admissions@dubaibritishschooljumeira.ae",
+    parentsConfirmed:3, parentsKhda:0,
+    note:"Issued FS1 offers and asked parents their preference on 16 Feb morning."
+  },
+  {
+    id:"dbs-jp", name:"Dubai British School Jumeirah Park (DBSJP)", type:"school", status:"confirmed",
+    curriculum:"British", grades:"FS1–Y13", location:"Jumeirah Park",
+    phone:"97145520247", website:"www.dubaibritishschooljp.ae", email:"principal@dubaibritishschooljp.ae",
+    parentsConfirmed:3, parentsKhda:2,
+    note:"Email sent 17 Feb at approximately 09:31. Staggered send — some parents received it earlier than others."
+  },
+  {
+    id:"dbs-eh", name:"Dubai British School Emirates Hills (DBSEH)", type:"school", status:"confirmed",
+    curriculum:"British", grades:"FS1–Y13", location:"Emirates Hills",
+    phone:"97143619361", website:"www.dubaibritishschool.ae", email:"principal@dubaibritishschool.ae",
+    parentsConfirmed:2, parentsKhda:2,
+    note:"Email sent early morning 17 Feb reinstating FS1 offers. Multiple parents confirmed receipt at different points during the day."
+  },
+  {
+    id:"dbs-mira", name:"Dubai British School Mira", type:"school", status:"confirmed",
+    curriculum:"British", grades:"FS1–Y13", location:"Mira",
+    phone:null, website:null, email:null,
+    parentsConfirmed:3, parentsKhda:2,
+    note:"Called parents individually on 17 Feb at approximately 09:40–09:43 to confirm the move back to FS1."
+  },
+  {
+    id:"gems-firstpoint", name:"GEMS First Point School", type:"school", status:"confirmed",
+    curriculum:"British", grades:"FS1–Y13", location:"Dubai Land",
+    phone:"97142789700", website:"www.gemsfirstpointschool-dubai.com", email:"Principal_fps@gemsedu.com",
+    parentsConfirmed:2, parentsKhda:2,
+    note:"Email sent 17 Feb: FS1 reinstated. Also offered FS2 assessment option for families who wish to proceed with the earlier year."
+  },
+  {
+    id:"gems-founders", name:"GEMS Founders School", type:"school", status:"confirmed",
+    curriculum:"British", grades:"FS1–Y13", location:"Al Barsha",
+    phone:"97145195222", website:"www.gemsfoundersschool-dubai.com", email:"h.mahmoud_gfs@gemsedu.com",
+    parentsConfirmed:1, parentsKhda:1,
+    note:"Email sent 17 Feb with guidance document attached, stating FS1 seat reinstated for AY 2026/27."
+  },
+  {
+    id:"ranches", name:"Ranches Primary School", type:"school", status:"confirmed",
+    curriculum:"British", grades:"FS1–Y6", location:"Arabian Ranches",
+    phone:"97144429765", website:"www.rpsdubai.com", email:"principal@rpsdubai.com",
+    parentsConfirmed:2, parentsKhda:0,
+    note:"Communication sent to parents as early as 11–13 Feb, confirming reversion to original FS1 placement. Among the first to communicate."
+  },
+  {
+    id:"safa-community", name:"Safa Community School (SCS)", type:"school", status:"confirmed",
+    curriculum:"British / IB", grades:"FS1–Y13", location:"Al Barsha South",
+    phone:"97143851810", website:"www.safacommunityschool.com", email:"sdaya@safacommunityschool.com",
+    parentsConfirmed:2, parentsKhda:1,
+    note:"Email sent early morning 17 Feb stating they received update from MOE / KHDA. Also confirmed 2024 babies can join FS1 in 2028."
+  },
+  {
+    id:"rgs", name:"Royal Grammar School Guildford Dubai", type:"school", status:"confirmed",
+    curriculum:"British", grades:"FS1–Y8", location:"Dubai Sports City",
+    phone:"97144464333", website:"www.rgsgd.com", email:"Principal@rgsgd.com",
+    parentsConfirmed:1, parentsKhda:0,
+    note:"Verbal confirmation over phone on 13 Feb that FS1 placements would be reinstated."
+  },
+  {
+    id:"nas", name:"Nord Anglia International School (NAS)", type:"school", status:"confirmed",
+    curriculum:"British / IB", grades:"FS1–Y13", location:"Al Barsha",
+    phone:"97142199999", website:"www.nasdubai.ae", email:"Matthew.Farthing@nasdubai.ae",
+    parentsConfirmed:2, parentsKhda:0,
+    note:"Reported to be filling FS1 spots from 12 Feb. Email sent to parents 13 Feb."
+  },
+  {
+    id:"greenfield", name:"Greenfield International School", type:"school", status:"confirmed",
+    curriculum:"IB", grades:"Pre Primary–G12", location:"Dubai Investment Park",
+    phone:"97148856600", website:"www.gischool.ae", email:"lgirven@gischool.ae",
+    parentsConfirmed:1, parentsKhda:1,
+    note:"Parent shared confirmation document 17 Feb afternoon. One of the few IB schools to confirm."
+  },
+  {
+    id:"dess", name:"Dubai English Speaking School (DESS)", type:"school", status:"waiting",
+    curriculum:"British", grades:"FS1–Y6", location:"Oud Metha",
+    phone:"97143371457", website:"www.dessc.sch.ae", email:"dess_headteacher@dessc.sch.ae",
+    parentsConfirmed:0, parentsKhda:0,
+    note:"No reinstatement confirmed as of 17 Feb afternoon. Multiple parents still waiting."
+  },
+  {
+    id:"horizon-english", name:"Horizons English School", type:"school", status:"waiting",
+    curriculum:"British", grades:"FS1–Y6", location:"Al Wasl",
+    phone:"97143422891", website:"www.horizonschooldubai.com", email:"arabicsec@horizonschooldubai.com",
+    parentsConfirmed:0, parentsKhda:0,
+    note:"Called a parent on 16 Feb but stated they had not yet received formal communication."
+  },
+  {
+    id:"harrow", name:"Harrow International School Dubai", type:"school", status:"waiting",
+    curriculum:"British", grades:null, location:null,
+    phone:null, website:null, email:null,
+    parentsConfirmed:0, parentsKhda:0,
+    note:"On 13 Feb, told parents they needed official written communication before taking action."
+  },
+  {
+    id:"queen-elizabeth", name:"Queen Elizabeth School", type:"school", status:"waiting",
+    curriculum:"British", grades:null, location:null,
+    phone:"0588325609", website:null, email:null,
+    parentsConfirmed:0, parentsKhda:0,
+    note:"On 13 Feb, told parents they needed official written communication before taking action."
+  },
+  {
+    id:"nlcs", name:"NLCS Dubai", type:"school", status:"waiting",
+    curriculum:"British", grades:null, location:null,
+    phone:null, website:null, email:null,
+    parentsConfirmed:0, parentsKhda:0,
+    note:"On 13 Feb, parent reported the school said they had not received any communication from MOE."
+  },
+  {
+    id:"jbs", name:"Jumeirah Baccalaureate School (JBS)", type:"school", status:"no",
+    curriculum:"IB", grades:null, location:null,
+    phone:null, website:null, email:null,
+    parentsConfirmed:0, parentsKhda:0,
+    note:"On 13 Feb, told a parent they would follow December cutoff with no flexibility. This was before the KHDA circular — information may have changed since."
+  },
+  {
+    id:"dia", name:"Dubai International Academy (DIA)", type:"school", status:"waiting",
+    curriculum:"IB", grades:"KG1–G13", location:"Emirates Hills",
+    phone:"97143684111", website:"www.diadubai.com", email:"dinay@diadubai.com",
+    parentsConfirmed:0, parentsKhda:0,
+    note:"Parent still waiting late evening 16 Feb. IB schools were generally slower to receive guidance."
+  },
+  {
+    id:"dubai-heights", name:"Dubai Heights Academy", type:"school", status:"waiting",
+    curriculum:"British / IB", grades:"FS1–Y9", location:"Al Barsha",
+    phone:"97143563333", website:"www.dubaiheightsacademy.com", email:"registrar@dubaiheightsacademy.com",
+    parentsConfirmed:0, parentsKhda:0,
+    note:"On 16 Feb, stated they would assess readiness case by case. No blanket reinstatement communicated."
+  },
+  {
+    id:"dibber", name:"Dibber Early Childhood Centre", type:"nursery", status:"confirmed",
+    curriculum:"ECC", grades:"Ages 0–6", location:"Multiple branches (Al Barsha South, Dubai Land, JGE)",
+    phone:"97142406728", website:"edu.dibber.com", email:"maha@creakids.ae",
+    parentsConfirmed:2, parentsKhda:1,
+    note:"Parent shared communication from Dibber Al Barsha South on 16 Feb afternoon. Sustainable City branch also gave parents with 2023 babies FS1 option."
+  },
+  {
+    id:"redwood", name:"Redwood Early Learning Centre", type:"nursery", status:"waiting",
+    curriculum:"British / ECC", grades:"Ages 0–6", location:"Al Barsha / Jumeirah Park",
+    phone:"97144531143", website:"www.redwoodcoe.com", email:"info@redwoodcoe.com",
+    parentsConfirmed:0, parentsKhda:0,
+    note:"Sent email on 14 Feb stating they were waiting for formal guidance. As of 17 Feb afternoon, still had not confirmed."
+  },
+  {
+    id:"willow", name:"Willow Children's Nursery", type:"nursery", status:"waiting",
+    curriculum:"ECC", grades:"Ages 0–6", location:"Umm Suqeim / Multiple branches",
+    phone:"97143214433", website:"willowchildrensnursery.com", email:"suroor.ansari@willowchildrensnursery.com",
+    parentsConfirmed:0, parentsKhda:0,
+    note:"On 13 Feb, told parent they were waiting for KHDA guidance before sharing further information."
+  },
+  {
+    id:"jebel-ali-village", name:"Jebel Ali Village Nursery", type:"nursery", status:"confirmed",
+    curriculum:"British / ECC", grades:"Ages 0–6", location:"Al Furjan / Multiple branches",
+    phone:"97142408267", website:"www.javn.ae", email:"theark@javn.ae",
+    parentsConfirmed:1, parentsKhda:0,
+    note:"On 10 Feb, confirmed willingness to enrol Dec 2022 children in FS1."
+  }
+];
+
+// ── STATE
+let activeFilter = 'all';
+let searchTerm = '';
+
+// ── HELPERS
+function fmt(d) {
+  if (d.status === 'confirmed') return { cls:'status-ok',   text:'FS1 / old cut-off communicated to parents' };
+  if (d.status === 'waiting')  return { cls:'status-waiting', text:'No confirmed update received as of 17 Feb — contact your school directly' };
+  if (d.status === 'no')       return { cls:'status-no',    text:'As of 13 Feb: stated December cut-off. Information may have changed — contact school directly.' };
+  return { cls:'', text:'' };
+}
+
+function card(d) {
+  const s = fmt(d);
+  const typeLabel = d.type === 'school' ? 'School' : 'Nursery / ECC';
+  const typeIcon  = d.type === 'school' ? '🏫' : '🌱';
+
+  const countHtml = d.parentsConfirmed > 0
+    ? `<div class="card-count-block">
+        <span class="count-big">${d.parentsConfirmed}</span>
+        <span class="count-label">parent${d.parentsConfirmed===1?'':'s'} reported</span>
+       </div>`
+    : `<div class="card-count-block">
+        <span class="count-zero">—</span>
+        <span class="count-zero-label">no reports yet</span>
+       </div>`;
+
+  const khdaHtml = d.parentsKhda > 0
+    ? `<span class="khda-badge khda-yes">✓ ${d.parentsKhda} confirmed KHDA 16 Feb circular</span>`
+    : `<span class="khda-badge khda-no">KHDA 16 Feb circular not confirmed</span>`;
+
+  const row = (ico, content) => `<div class="detail-line"><span class="ico">${ico}</span>${content}</div>`;
+  const ph  = d.phone   ? row('📞', `<a href="tel:+${d.phone}">${d.phone.startsWith('97')?'+'+d.phone:d.phone}</a>`) : '';
+  const em  = d.email   ? row('✉️', `<a href="mailto:${d.email}">${d.email}</a>`) : '';
+  const wb  = d.website ? row('🌐', `<a href="https://${d.website.replace(/^https?:\/\//,'')}" target="_blank" rel="noopener">${d.website}</a>`) : '';
+  const lc  = d.location ? row('📍', d.location) : '';
+  const gr  = d.grades   ? row('🎒', d.grades) : '';
+  const nt  = d.note     ? row('📝', d.note) : '';
+
+  const subj = encodeURIComponent(`Update for ${d.name} on the school tracker`);
+
+  return `
+<div class="card" data-type="${d.type}" data-status="${d.status}">
+  <div class="card-summary">
+    <div class="card-summary-left">
+      <div class="card-name">${typeIcon} ${d.name}</div>
+      <div class="card-tags">
+        <span class="tag tag-type">${typeLabel}</span>
+        ${d.curriculum ? `<span class="tag tag-curriculum">${d.curriculum}</span>` : ''}
+      </div>
+    </div>
+    ${countHtml}
+  </div>
+  <div class="card-body">
+    <div class="status-line ${s.cls}">${s.text}</div>
+    ${khdaHtml}
+    ${nt}${lc}${gr}${ph}${em}${wb}
+    <a class="update-btn" href="mailto:readynotrushed@pm.me?subject=${subj}">✏️ Submit a correction</a>
+  </div>
+</div>`;
+}
+
+// ── RENDER
+function render() {
+  const visible = DATA.filter(d => {
+    const typeOk   = activeFilter === 'all' || d.type === activeFilter;
+    const searchOk = searchTerm === '' || d.name.toLowerCase().includes(searchTerm);
+    return typeOk && searchOk;
+  });
+
+  const confirmed = visible.filter(d => d.status === 'confirmed');
+  const waiting   = visible.filter(d => d.status === 'waiting');
+  const no        = visible.filter(d => d.status === 'no');
+
+  let html = '';
+  if (!visible.length) {
+    html = `<div class="no-results">No results. <a href="mailto:readynotrushed@pm.me?subject=Suggest%20a%20school%20for%20the%20tracker">Suggest this school?</a></div>`;
+  } else {
+    if (confirmed.length) { html += `<div class="section-title">Confirmed / communicated to parents (${confirmed.length})</div>`; confirmed.forEach(d => html += card(d)); }
+    if (waiting.length)   { html += `<div class="section-title">No confirmed update yet (${waiting.length})</div>`;             waiting.forEach(d => html += card(d)); }
+    if (no.length)        { html += `<div class="section-title">Stated no flexibility as of 13 Feb — may have changed (${no.length})</div>`; no.forEach(d => html += card(d)); }
+  }
+
+  document.getElementById('cards-container').innerHTML = html;
+
+  // stats always from full DATA
+  document.getElementById('s-schools').textContent   = DATA.filter(d => d.type==='school').length;
+  document.getElementById('s-nurseries').textContent = DATA.filter(d => d.type==='nursery').length;
+  document.getElementById('s-khda').textContent      = DATA.filter(d => d.parentsKhda > 0).length;
+}
+
+// ── EVENTS
+document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.f;
+  render();
+}));
+
+document.getElementById('search-input').addEventListener('input', e => {
+  searchTerm = e.target.value.toLowerCase().trim();
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
