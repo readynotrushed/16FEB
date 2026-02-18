@@ -647,9 +647,9 @@ let searchTerm = '';
 
 // ── HELPERS
 function fmt(d) {
-  if (d.status === 'confirmed') return { cls:'status-ok',   text:'FS1 / old cut-off communicated to parents' };
-  if (d.status === 'waiting')  return { cls:'status-waiting', text:'No confirmed update received as of 17 Feb — contact your school directly' };
-  if (d.status === 'no')       return { cls:'status-no',    text:'As of 13 Feb: stated December cut-off. Information may have changed — contact school directly.' };
+  if (d.status === 'confirmed') return { cls:'status-ok',   text:'confirmed to parents: will apply old cut-off (Sept / Aug)' };
+  if (d.status === 'waiting')  return { cls:'status-waiting', text:'no confirmed update received as of 18 Feb' };
+  if (d.status === 'no')       return { cls:'status-no',    text:'still applying new cut-off (Jan / Dec). info may have changed. contact school directly.' };
   return { cls:'', text:'' };
 }
 
