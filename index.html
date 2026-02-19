@@ -66,36 +66,58 @@
   hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
 
   /* ── STATS ── */
-  .stats-row {
-    display: flex;
+  .stats-container {
     margin-bottom: 16px;
     border: 1px solid var(--blue-border);
     border-radius: 8px;
     overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--blue-bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--blue-border);
+  }
+  .stats-section {
+    padding: 12px 16px;
+    border-right: 1px solid var(--blue-border);
+  }
+  .stats-section:last-child { border-right: none; }
+  .stats-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--blue-deeper);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .stats-row {
+    display: flex;
+    gap: 0;
   }
   .stat-cell {
     flex: 1;
-    padding: 14px 12px;
-    border-right: 1px solid var(--blue-border);
+    padding: 10px 12px;
     text-align: center;
+    border-right: 1px solid var(--blue-border);
   }
   .stat-cell:last-child { border-right: none; }
   .stat-num {
-    font-size: 26px;
+    font-size: 32px;
     font-weight: 700;
     display: block;
     line-height: 1;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     color: var(--blue-deeper);
   }
   .stat-label {
-    font-size: 10.5px;
+    font-size: 10px;
     color: var(--blue-dark);
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    line-height: 1.35;
+    line-height: 1.3;
   }
 
   /* ── SUGGEST BUTTON ── */
@@ -347,22 +369,38 @@
 
 <hr>
 
-<div class="stats-row">
-  <div class="stat-cell">
-    <span class="stat-num" id="s-schools">0</span>
-    <span class="stat-label">Schools</span>
-  </div>
-  <div class="stat-cell">
-    <span class="stat-num" id="s-nurseries">0</span>
-    <span class="stat-label">Nurseries</span>
-  </div>
-  <div class="stat-cell">
-    <span class="stat-num" id="s-khda">0</span>
-    <span class="stat-label">KHDA 16 Feb circular confirmed</span>
+<div class="stats-container">
+  <div class="stats-grid">
+    <div class="stats-section">
+      <div class="stats-section-title">Schools</div>
+      <div class="stats-row">
+        <div class="stat-cell">
+          <span class="stat-num" id="s-schools-old">0</span>
+          <span class="stat-label">Old cut-off</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num" id="s-schools-khda">0</span>
+          <span class="stat-label">KHDA circular</span>
+        </div>
+      </div>
+    </div>
+    <div class="stats-section">
+      <div class="stats-section-title">Nurseries</div>
+      <div class="stats-row">
+        <div class="stat-cell">
+          <span class="stat-num" id="s-nurseries-old">0</span>
+          <span class="stat-label">Old cut-off</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num" id="s-nurseries-khda">0</span>
+          <span class="stat-label">KHDA circular</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<a class="suggest-btn" href="mailto:readynotrushed@pm.me?subject=Suggest%20a%20school%20or%20nursery%20for%20the%20tracker">
+<a class="suggest-btn" href="/cdn-cgi/l/email-protection#57253236332e3938232522243f323317273a793a32682422353d3234236a042230303224237265673672656724343f38383b72656738257265673922252432252e726567313825726567233f32726567232536343c3225">
   + Suggest a school or nursery
 </a>
 
@@ -379,7 +417,7 @@
 
 <div id="cards-container"></div>
 
-<a class="suggest-btn" href="mailto:readynotrushed@pm.me?subject=Suggest%20a%20school%20or%20nursery%20for%20the%20tracker" style="margin-top:24px;margin-bottom:0">
+<a class="suggest-btn" href="/cdn-cgi/l/email-protection#fd8f989c99849392898f888e959899bd8d90d39098c28e889f97989e89c0ae889a9a988e89d8cfcd9cd8cfcd8e9e95929291d8cfcd928fd8cfcd93888f8e988f84d8cfcd9b928fd8cfcd899598d8cfcd898f9c9e96988f" style="margin-top:24px;margin-bottom:0">
   + Suggest a school or nursery
 </a>
 
@@ -389,10 +427,10 @@
 </div>
 
 <footer>
-  Information shared informally between parents. No affiliation with KHDA, MOE, or any school. Always verify with your school directly. &nbsp;·&nbsp; <a href="mailto:readynotrushed@pm.me">readynotrushed@pm.me</a>
+  Information shared informally between parents. No affiliation with KHDA, MOE, or any school. Always verify with your school directly. &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection#c1b3a4a0a5b8afaeb5b3b4b2a9a4a581b1acefaca4"><span class="__cf_email__" data-cfemail="63110602071a0d0c171116100b060723130e4d0e06">[email&#160;protected]</span></a>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const DATA = [
    {
     id:"sunmarke", name:"Sunmarke", type:"school", status:"confirmed",
@@ -693,19 +731,12 @@ function card(d) {
   const typeLabel = d.type === 'school' ? 'School' : 'Nursery / ECC';
   const typeIcon  = d.type === 'school' ? '🏫' : '🌱';
 
-  const countHtml = d.parentsConfirmed > 0
-    ? `<div class="card-count-block">
-        <span class="count-big">${d.parentsConfirmed}</span>
-        <span class="count-label">parent${d.parentsConfirmed===1?'':'s'} reported</span>
-       </div>`
-    : `<div class="card-count-block">
-        <span class="count-zero">—</span>
-        <span class="count-zero-label">no reports yet</span>
+  const countHtml = `<div class="card-count-block">
+        <span class="count-big">${d.parentsConfirmed > 0 ? d.parentsConfirmed : '—'}</span>
+        <span class="count-label">${d.parentsConfirmed > 0 ? 'parent' + (d.parentsConfirmed===1?'':'s') + ' reported' : 'no reports yet'}</span>
        </div>`;
 
-  const khdaHtml = d.parentsKhda > 0
-    ? `<span class="khda-badge khda-yes">✓ ${d.parentsKhda} confirmed KHDA 16 Feb circular</span>`
-    : `<span class="khda-badge khda-no">KHDA 16 Feb circular not confirmed</span>`;
+  const khdaHtml = `<span class="khda-badge ${d.parentsKhda > 0 ? 'khda-yes' : 'khda-no'}">${d.parentsKhda > 0 ? '✓' : ''} ${d.parentsKhda} confirmed KHDA 16 Feb circular</span>`;
 
   const row = (ico, content) => `<div class="detail-line"><span class="ico">${ico}</span>${content}</div>`;
   const ph  = d.phone   ? row('📞', `<a href="tel:+${d.phone}">${d.phone.startsWith('97')?'+'+d.phone:d.phone}</a>`) : '';
@@ -761,13 +792,18 @@ function render() {
 
   document.getElementById('cards-container').innerHTML = html;
 
-  // stats always from full DATA
-  document.getElementById('s-schools').textContent   = DATA.filter(d => d.type==='school').length;
-  document.getElementById('s-nurseries').textContent = DATA.filter(d => d.type==='nursery').length;
-  document.getElementById('s-khda').textContent      = DATA.filter(d => d.parentsKhda > 0).length;
+  // stats breakdown: schools/nurseries with old cutoff vs KHDA circular
+  const schoolsOldCutoff = DATA.filter(d => d.type==='school' && d.parentsConfirmed > 0).length;
+  const nurseriesOldCutoff = DATA.filter(d => d.type==='nursery' && d.parentsConfirmed > 0).length;
+  const schoolsKhda = DATA.filter(d => d.type==='school' && d.parentsKhda > 0).length;
+  const nurseriesKhda = DATA.filter(d => d.type==='nursery' && d.parentsKhda > 0).length;
+  
+  document.getElementById('s-schools-old').textContent = schoolsOldCutoff;
+  document.getElementById('s-nurseries-old').textContent = nurseriesOldCutoff;
+  document.getElementById('s-schools-khda').textContent = schoolsKhda;
+  document.getElementById('s-nurseries-khda').textContent = nurseriesKhda;
 }
 
-// ── EVENTS
 document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
